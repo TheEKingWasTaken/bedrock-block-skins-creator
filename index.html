@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Texture Processor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <input type="file" id="fileInput" accept="image/png" multiple>
+    
+    <div id="canvasContainer" style="display: none;">
+      <div id="faceControls">
+        <div class="face-selector">
+          <label>Bottom:</label>
+          <select data-face="bottom">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Top:</label>
+          <select data-face="top">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Left:</label>
+          <select data-face="left">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Front:</label>
+          <select data-face="front">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Right:</label>
+          <select data-face="right">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Back:</label>
+          <select data-face="back">
+          </select>
+        </div>
+        <div class="texture-upload">
+          <label>Additional Textures:</label>
+          <input type="file" id="additionalTextures" accept="image/png" multiple>
+          <span id="textureCount">1/6</span>
+        </div>
+        <div id="textureList"></div>
+      </div>
+      
+      <canvas id="outputCanvas" width="128" height="128"></canvas>
+      <div class="button-group">
+        <button id="downloadBtn">Download PNG</button>
+        <button id="addToPackBtn">Add to Skin Pack</button>
+        <button id="viewPackBtn" style="display: none;">View Pack & Export</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="skinPackModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add to Skin Pack</h2>
+      
+      <div id="inputStep">
+        <div class="form-group">
+          <label>Identifier *</label>
+          <input type="text" id="identifierInput" placeholder="e.g. craft">
+          <span class="error-text" id="identifierError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label>Skin Name *</label>
+          <input type="text" id="skinNameInput" placeholder="e.g. Crafting Table">
+        </div>
+        
+        <button id="continueBtn" disabled>Continue</button>
+      </div>
+      
+      <div id="packStep" style="display: none;">
+        <div class="form-group">
+          <label>Root Folder Name</label>
+          <input type="text" id="folderNameInput" value="MyBlockSkinPack">
+        </div>
+        
+        <div class="form-group">
+          <label>Manifest Name</label>
+          <input type="text" id="manifestNameInput" value="Block Skin Pack">
+        </div>
+        
+        <div class="form-group">
+          <label>Manifest Description</label>
+          <input type="text" id="manifestDescInput" value="Custom block skins">
+        </div>
+        
+        <div class="folder-tree">
+          <div class="tree-item folder">
+            <span>📁 <span id="previewFolderName">MyBlockSkinPack</span></span>
+            <div class="tree-children">
+              <div class="tree-item file"><span id="previewIdentifierFile">identifier.png</span></div>
+              <div class="tree-item file">manifest.json</div>
+              <div class="tree-item file">skins.json</div>
+              <div class="tree-item folder">
+                <span>📁 text</span>
+                <div class="tree-children">
+                  <div class="tree-item file">languages.json</div>
+                  <div class="tree-item file">en_US.lang</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button id="addAnotherBtn">Add Another Skin</button>
+          <button id="exportPackBtn">Export Skin Pack</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "jszip": "https://esm.sh/jszip@3.10.1"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
