@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minecraft Texture Processor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button id="homeBtn" class="home-button">Home</button>
+
+  <div class="home-layout">
+    <div class="import-card" id="firstTextureCard">
+      <h2>First Texture</h2>
+      <p class="card-subtitle">Import your first PNG texture to start</p>
+      <div class="card-drop-area">
+        <p>Choose PNG file(s)</p>
+        <input type="file" id="fileInput" accept="image/png" multiple>
+      </div>
+    </div>
+
+    <div class="import-card" id="resourcePackCard">
+      <h2>Resource Pack</h2>
+      <p class="card-subtitle">Import a Minecraft resource pack (.mcpack or .zip)</p>
+      <div id="rpTopImport">
+        <div id="rpDropArea">
+          <p>Import Resource Pack (.mcpack or .zip)</p>
+          <p class="rp-drop-hint">Drag &amp; drop here or choose a file</p>
+          <input type="file" id="rpTopFileInput" accept=".mcpack,.zip">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="canvasContainer" style="display: none;">
+      <div id="faceControls">
+        <div class="face-selector">
+          <label>Bottom:</label>
+          <select data-face="bottom">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Top:</label>
+          <select data-face="top">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Left:</label>
+          <select data-face="left">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Front:</label>
+          <select data-face="front">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Right:</label>
+          <select data-face="right">
+          </select>
+        </div>
+        <div class="face-selector">
+          <label>Back:</label>
+          <select data-face="back">
+          </select>
+        </div>
+        <div class="texture-upload">
+          <label>Additional Textures:</label>
+          <input type="file" id="additionalTextures" accept="image/png" multiple>
+          <span id="textureCount">0 textures</span>
+        </div>
+        <div id="textureList"></div>
+      </div>
+      
+      <canvas id="outputCanvas" width="128" height="128"></canvas>
+      <div class="button-group">
+        <button id="downloadBtn">Download PNG</button>
+        <button id="saveEditBtn" style="display:none;">Save</button>
+        <button id="addToPackBtn">Add to Skin Pack</button>
+        <button id="viewPackBtn" style="display: none;">View Pack & Export</button>
+        <button id="importPackBtn">Import Resource Pack</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="skinPackModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add to Skin Pack</h2>
+      
+      <div id="inputStep">
+        <div class="form-group">
+          <label>Identifier *</label>
+          <input type="text" id="identifierInput" placeholder="e.g. craft">
+          <span class="error-text" id="identifierError"></span>
+        </div>
+        
+        <div class="form-group">
+          <label>Skin Name *</label>
+          <input type="text" id="skinNameInput" placeholder="e.g. Crafting Table">
+        </div>
+        
+        <button id="continueBtn" disabled>Continue</button>
+      </div>
+      
+      <div id="packStep" style="display: none;">
+        <div class="form-group">
+          <label>Root Folder Name</label>
+          <input type="text" id="folderNameInput" value="MyBlockSkinPack">
+        </div>
+        
+        <div class="form-group">
+          <label>Manifest Name</label>
+          <input type="text" id="manifestNameInput" value="Block Skin Pack">
+        </div>
+        
+        <div class="form-group">
+          <label>Manifest Description</label>
+          <input type="text" id="manifestDescInput" value="Custom block skins">
+        </div>
+        
+        <div class="folder-tree">
+          <div class="tree-item folder">
+            <span>📁 <span id="previewFolderName">MyBlockSkinPack</span></span>
+            <div class="tree-children">
+              <div class="tree-item file"><span id="previewIdentifierFile">identifier.png</span></div>
+              <div class="tree-item file">manifest.json</div>
+              <div class="tree-item file">skins.json</div>
+              <div class="tree-item folder">
+                <span>📁 text</span>
+                <div class="tree-children">
+                  <div class="tree-item file">languages.json</div>
+                  <div class="tree-item file">en_US.lang</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button id="addAnotherBtn">Add Another Skin</button>
+          <button id="exportPackBtn">Export Skin Pack</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div id="resourcePackModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="rpClose">&times;</span>
+      <h2>Import Resource Pack</h2>
+
+      <div id="rpStepSelect">
+        <div class="form-group">
+          <label>Resource Pack File (.mcpack or .zip)</label>
+          <input type="file" id="resourcePackInput" accept=".mcpack,.zip">
+        </div>
+
+      </div>
+
+      <div id="rpProcessing" style="display:none;">
+        <div id="rpProgressBarContainer">
+          <div id="rpProgressBar">
+            <div id="rpProgressFill"></div>
+          </div>
+          <div id="rpProgressLabel">Waiting...</div>
+        </div>
+      </div>
+
+      <div id="rpReview" style="display:none;">
+        <div class="form-group">
+          <label>Skin Pack Name</label>
+          <input type="text" id="rpPackNameInput" value="Imported Block Skin Pack">
+        </div>
+        <div class="form-group">
+          <label>Skin Pack Description</label>
+          <input type="text" id="rpPackDescInput" value="Skins generated from a resource pack">
+        </div>
+        <div class="form-group">
+          <label>Add Additional PNG Textures</label>
+          <input type="file" id="rpExtraTexturesInput" accept="image/png" multiple>
+        </div>
+
+        <div class="folder-tree rp-skin-list" id="rpSkinList">
+          <!-- Filled dynamically with detected skins -->
+        </div>
+
+        <div class="button-group">
+          <button id="rpBackBtn">Back</button>
+          <select id="rpExportFormat">
+            <option value="mcpack">Export as .mcpack</option>
+            <option value="zip">Export as .zip</option>
+          </select>
+          <button id="rpExportBtn">Export Skin Pack</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "jszip": "https://esm.sh/jszip@3.10.1"
+      }
+    }
+  </script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

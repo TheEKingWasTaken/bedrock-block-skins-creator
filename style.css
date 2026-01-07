@@ -1,0 +1,535 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+  min-height: 100vh;
+  background: white;
+}
+
+.home-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1500;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: #111;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.home-button:hover {
+  background: #333;
+}
+
+.home-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 5rem 1rem 1rem;
+}
+
+.import-card {
+  flex: 1 1 260px;
+  max-width: 360px;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.import-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.25rem;
+}
+
+.card-subtitle {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.75rem;
+}
+
+.card-drop-area {
+  border: 1px dashed #999;
+  padding: 1rem;
+  text-align: center;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.card-drop-area p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-drop-area input[type="file"] {
+  width: 100%;
+}
+
+.container {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+#rpTopImport {
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+#rpDropArea {
+  border: 1px dashed #999;
+  padding: 1rem;
+  text-align: center;
+  background: #fafafa;
+  cursor: pointer;
+}
+
+#rpDropArea.drag-over {
+  background: #f0f0f0;
+  border-color: #333;
+}
+
+#rpDropArea p {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.rp-drop-hint {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+#rpTopFileInput {
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+#fileInput {
+  margin-bottom: 2rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+#canvasContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+#faceControls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.face-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.face-selector label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.face-selector select {
+  padding: 0.5rem;
+  border: 1px solid #333;
+  background: white;
+  font-family: 'Noto Sans', sans-serif;
+  cursor: pointer;
+}
+
+.texture-upload {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.texture-upload label {
+  font-weight: 500;
+}
+
+#additionalTextures {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+
+#textureCount {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+#textureList {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #ddd;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.texture-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.texture-name {
+  flex: 1;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+.texture-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.texture-edit-icon,
+.texture-rename-icon,
+.texture-delete-icon {
+  display: none;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+.texture-item:hover .texture-edit-icon,
+.texture-item:hover .texture-rename-icon,
+.texture-item:hover .texture-delete-icon {
+  display: inline-block;
+}
+
+.texture-edit-icon:hover,
+.texture-rename-icon:hover,
+.texture-delete-icon:hover {
+  background: #eee;
+}
+
+/* Hover tooltip for texture previews */
+.texture-preview-tooltip {
+  position: fixed;
+  z-index: 2000;
+  padding: 0.5rem;
+  background: white;
+  border: 1px solid #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+/* Face selector searchable dropdown */
+.face-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.face-dropdown-label {
+  padding: 0.25rem;
+  border: 1px solid #333;
+  background: white;
+  font-size: 0.875rem;
+  cursor: pointer;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.face-label-thumb {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.face-search-input {
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  font-size: 0.8rem;
+}
+
+.face-dropdown-list {
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background: #fff;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
+  z-index: 1500;
+}
+
+.face-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.face-option:hover {
+  background: #f0f0f0;
+}
+
+.face-option-thumb {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.face-option-name {
+  font-size: 0.8rem;
+}
+
+/* Skin file explorer pencil button */
+.skin-file-edit {
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+}
+
+.skin-file-edit:hover {
+  background: #eee;
+}
+
+#outputCanvas {
+  border: 1px solid #333;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  width: 256px;
+  height: 256px;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+#downloadBtn, #saveEditBtn, #addToPackBtn, #viewPackBtn, #importPackBtn {
+  padding: 0.75rem 1.5rem;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+}
+
+#downloadBtn:hover, #saveEditBtn:hover, #addToPackBtn:hover, #viewPackBtn:hover, #importPackBtn:hover {
+  background: #333;
+}
+
+#viewPackBtn {
+  background: #444;
+}
+
+#importPackBtn {
+  background: #666;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 2rem;
+  border: 1px solid #333;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.close {
+  color: #333;
+  float: right;
+  font-size: 1.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.close:hover {
+  color: black;
+}
+
+.modal-content h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #333;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+}
+
+.error-text {
+  display: block;
+  color: #d32f2f;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  min-height: 1.25rem;
+}
+
+#continueBtn, #addAnotherBtn, #exportPackBtn, #rpBackBtn, #rpExportBtn {
+  padding: 0.75rem 1.5rem;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 1rem;
+}
+
+#continueBtn:disabled, #rpExportBtn:disabled, #rpBackBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+#continueBtn:not(:disabled):hover, #addAnotherBtn:hover, #exportPackBtn:hover {
+  background: #333;
+}
+
+.folder-tree {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
+}
+
+.tree-item {
+  margin: 0.25rem 0;
+}
+
+.tree-item.folder > span {
+  font-weight: 500;
+}
+
+.tree-children {
+  margin-left: 1.5rem;
+  border-left: 1px solid #ddd;
+  padding-left: 0.75rem;
+}
+
+.tree-item.file {
+  color: #666;
+}
+
+#rpProgressBarContainer {
+  margin: 1rem 0;
+}
+
+#rpExportFormat {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #333;
+  background: white;
+  font-family: 'Noto Sans', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+#rpProgressBar {
+  width: 100%;
+  height: 12px;
+  background: #eee;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+#rpProgressFill {
+  height: 100%;
+  width: 0%;
+  background: #222;
+  transition: width 0.2s ease;
+}
+
+#rpProgressLabel {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.rp-skin-list .rp-skin-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rp-skin-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.rp-skin-edit {
+  margin-left: auto;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.75rem;
+  border: 1px solid #333;
+  background: #fff;
+  cursor: pointer;
+}
+
+.rp-skin-edit:hover {
+  background: #eee;
+}
